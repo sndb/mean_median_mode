@@ -5,8 +5,8 @@ fn mean(list: &[i32]) -> f64 {
     let mut sum = 0.0;
     let mut len = 0.0;
 
-    for i in list {
-        sum += f64::from(*i);
+    for &i in list {
+        sum += f64::from(i);
         len += 1.0;
     }
 
@@ -22,8 +22,8 @@ fn mode(list: &[i32]) -> i32 {
     let mut count = 0;
     let mut num = None;
 
-    for i in list {
-        *map.entry(*i).or_insert(0) += 1;
+    for &i in list {
+        *map.entry(i).or_insert(0) += 1;
     }
 
     for (n, c) in map {
