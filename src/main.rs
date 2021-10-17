@@ -1,40 +1,5 @@
-use std::collections::HashMap;
+use liststat::{mean, median, mode};
 use std::io::{self, Write};
-
-fn mean(list: &[i32]) -> f64 {
-    let mut sum = 0.0;
-    let mut len = 0.0;
-
-    for &i in list {
-        sum += f64::from(i);
-        len += 1.0;
-    }
-
-    sum / len
-}
-
-fn median(list: &[i32]) -> i32 {
-    list[list.len() / 2]
-}
-
-fn mode(list: &[i32]) -> i32 {
-    let mut map: HashMap<i32, i32> = HashMap::new();
-    let mut count = 0;
-    let mut num = None;
-
-    for &i in list {
-        *map.entry(i).or_insert(0) += 1;
-    }
-
-    for (n, c) in map {
-        if c > count {
-            count = c;
-            num = Some(n);
-        }
-    }
-
-    num.expect("list len must be > 0")
-}
 
 fn main() -> io::Result<()> {
     let mut input = String::new();
@@ -57,20 +22,20 @@ fn main() -> io::Result<()> {
                 if numbers.len() == 0 {
                     continue;
                 }
-                println!("Result: {}", mean(&numbers));
+                println!("Result: {}", mean(&numbers).unwrap());
             }
             "median" => {
                 if numbers.len() == 0 {
                     continue;
                 }
                 numbers.sort_unstable();
-                println!("Result: {}", median(&numbers));
+                println!("Result: {}", median(&numbers).unwrap());
             }
             "mode" => {
                 if numbers.len() == 0 {
                     continue;
                 }
-                println!("Result: {}", mode(&numbers));
+                println!("Result: {}", mode(&numbers).unwrap());
             }
             "clear" => numbers.clear(),
             "quit" => {
