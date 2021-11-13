@@ -3,5 +3,5 @@
 version = 3
 
 [[package]]
-name = "liststat"
+name = "mean_median_mode"
 version = "0.1.0"

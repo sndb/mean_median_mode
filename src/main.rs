@@ -1,4 +1,4 @@
-use liststat::{mean, median, mode};
+use mean_median_mode::{mean, median, mode};
 use std::io::{self, Write};
 
 fn main() -> io::Result<()> {
@@ -11,30 +11,32 @@ fn main() -> io::Result<()> {
     loop {
         println!("Enter the next number or operation:");
         println!("Current numbers: {:?}", numbers);
-
         print!("$ ");
-
         io::stdout().flush()?;
 
-        io::stdin().read_line(&mut input).unwrap();
+        io::stdin().read_line(&mut input)?;
         match input.to_lowercase().trim() {
             "mean" => {
                 if numbers.len() == 0 {
                     continue;
                 }
+
                 println!("Result: {}", mean(&numbers).unwrap());
             }
             "median" => {
                 if numbers.len() == 0 {
                     continue;
                 }
+
                 numbers.sort_unstable();
+
                 println!("Result: {}", median(&numbers).unwrap());
             }
             "mode" => {
                 if numbers.len() == 0 {
                     continue;
                 }
+
                 println!("Result: {}", mode(&numbers).unwrap());
             }
             "clear" => numbers.clear(),
@@ -42,15 +44,12 @@ fn main() -> io::Result<()> {
                 println!("Bye!");
                 break Ok(());
             }
-            n => {
-                let n = n.parse();
-                if let Ok(n) = n {
-                    numbers.push(n);
-                } else {
-                    println!("You must enter a number.");
-                }
-            }
+            n => match n.parse() {
+                Ok(n) => numbers.push(n),
+                Err(_) => println!("You must enter a number."),
+            },
         }
+
         input.clear();
     }
 }

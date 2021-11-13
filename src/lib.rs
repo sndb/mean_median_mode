@@ -1,9 +1,8 @@
 use std::collections::HashMap;
 
 pub fn mean(list: &[i32]) -> Option<f64> {
-    let len = list.len();
-    if len > 0 {
-        Some(list.iter().sum::<i32>() as f64 / len as f64)
+    if list.len() > 0 {
+        Some(list.iter().sum::<i32>() as f64 / list.len() as f64)
     } else {
         None
     }
@@ -18,16 +17,16 @@ pub fn median(list: &[i32]) -> Option<i32> {
 }
 
 pub fn mode(list: &[i32]) -> Option<i32> {
-    let mut map: HashMap<i32, i32> = HashMap::new();
+    let mut number_count: HashMap<i32, i32> = HashMap::new();
 
-    for &i in list.iter() {
-        *map.entry(i).or_insert(0) += 1;
-    }
+    list.iter()
+        .for_each(|&i| *number_count.entry(i).or_insert(0) += 1);
 
-    let result = map.iter().reduce(|a, b| if a.1 > b.1 { a } else { b });
-
-    match result {
-        Some(a) => Some(*a.0),
+    match number_count
+        .iter()
+        .reduce(|a, b| if a.1 > b.1 { a } else { b })
+    {
+        Some((&a, _)) => Some(a),
         None => None,
     }
 }
@@ -37,22 +36,34 @@ mod tests {
     use super::*;
 
     #[test]
-    fn mean_basic() {
+    fn test_mean() {
         assert_eq!(Some(2.5), mean(&[1, 2, 3, 4]));
     }
 
     #[test]
-    fn median_basic() {
+    fn test_mean_empty() {
+        assert_eq!(None, mean(&[]));
+    }
+
+    #[test]
+    fn test_median() {
         assert_eq!(Some(2), median(&[1, 2, 3]));
     }
 
     #[test]
-    fn median_empty() {
+    fn test_median_empty() {
         assert_eq!(None, median(&[]));
     }
 
     #[test]
-    fn mode_basic() {
+    fn test_mode() {
         assert_eq!(Some(1), mode(&[1, 1, 1, 2, 2, 3]));
+        assert_eq!(Some(2), mode(&[1, 2, 2, 2, 3, 3]));
+        assert_eq!(Some(3), mode(&[1, 2, 2, 3, 3, 3]));
+    }
+
+    #[test]
+    fn test_mode_empty() {
+        assert_eq!(None, mode(&[]));
     }
 }
